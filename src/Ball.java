@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class Ball extends Sprite {
+class Ball extends Sprite {
     private float vx = (float)( 150 + (Math.random() * 200f));
     private float vy = (float)( 150 + (Math.random() * 200f));
     private final Color color = new Color(

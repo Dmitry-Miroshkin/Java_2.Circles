@@ -1,39 +1,39 @@
 import java.awt.*;
 
-public class Sprite {
-    protected float x;
-    protected float y;
-    protected float halfWidth;
-    protected float halfHeight;
+class Sprite {
+    float x;
+    float y;
+    float halfWidth;
+    float halfHeight;
 
-    protected float getLeft() {
+    float getLeft() {
         return x - halfWidth;
     }
-    protected void setLeft(float left) {
+    void setLeft(float left) {
         x = left + halfWidth;
     }
-    protected float getRight() {
+    float getRight() {
         return x + halfWidth;
     }
-    protected void setRight(float right) {
+    void setRight(float right) {
         x = right - halfWidth;
     }
-    protected float getTop() {
+    float getTop() {
         return y - halfHeight;
     }
-    protected void setTop(float top) {
+    void setTop(float top) {
         y = top + halfHeight;
     }
-    protected float getBottom() {
+    float getBottom() {
         return y + halfHeight;
     }
-    protected void setBottom(float bottom) {
+    void setBottom(float bottom) {
         y = bottom - halfHeight;
     }
-    protected float getWidth() {
+    float getWidth() {
         return 2f * halfWidth;
     }
-    protected float getHeight() {
+    float getHeight() {
         return 2f * halfHeight;
     }
 
