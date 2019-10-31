@@ -2,18 +2,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 // user input, update, render
+
 public class GameCanvas extends JPanel {
 
     private final MainCircles gameController;
     private long lastFrameTime;
+    static int count = 10; // счетчик дополнительных шаров
 
-    public GameCanvas(MainCircles gameController) {
+    GameCanvas(MainCircles gameController) {
         this.gameController = gameController;
         lastFrameTime = System.nanoTime();
 
-        int delay = 2000;
+        int delay = 2000;// время между сменой цвета фона
         ActionListener listener = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -22,6 +26,7 @@ public class GameCanvas extends JPanel {
         };
         Timer timer = new Timer(delay, listener);
         timer.start();
+        this.addMouseListener(new CustomListener());
     }
 
     @Override
@@ -40,20 +45,49 @@ public class GameCanvas extends JPanel {
         repaint();
     }
 
-    public int getLeft() {
+    int getLeft() {
         return 0;
     }
 
-    public int getRight() {
+    int getRight() {
         return getWidth() - 1;
     }
 
-    public int getTop() {
+    int getTop() {
         return 0;
     }
 
-    public int getBottom() {
+    int getBottom() {
         return getHeight() - 1;
+    }
+
+    static class CustomListener implements MouseListener {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+        }
+
+        public void mouseReleased(MouseEvent e) {
+//            Background.setBG(GameCanvas.this); Смена цвета фона по клику мышки
+            if (count < 20 && e.getButton() == MouseEvent.BUTTON1) {
+                MainCircles.sprites[count] = new Ball(); // добавляем новый шар по клику левой кнопкой
+                count++;
+            }
+            if (count > 0 && e.getButton() == MouseEvent.BUTTON3) {
+                count--; // убираем шары по правой кнопке
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        }
     }
 }
 

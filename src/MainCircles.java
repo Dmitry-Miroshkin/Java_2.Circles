@@ -15,7 +15,7 @@ public class MainCircles extends JFrame {
     private static final int POS_Y = 200;
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
-    private Sprite[] sprites = new Sprite[10];
+     static Sprite[] sprites = new Sprite[20];
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -37,26 +37,28 @@ public class MainCircles extends JFrame {
         setVisible(true);
     }
 
-    public void initApplication() {
-        for (int i = 0; i < sprites.length; i++) {
+    private void initApplication() {
+        for (int i = 0; i < GameCanvas.count; i++) {
             sprites[i] = new Ball();
         }
     }
 
-    public void onDrawFrame(GameCanvas canvas, Graphics g, float deltaTime) {
+    void onDrawFrame(GameCanvas canvas, Graphics g, float deltaTime) {
         update(canvas, deltaTime);
         render(canvas, g);
     }
 
     private void update(GameCanvas canvas, float deltaTime) {
-        for (int i = 0; i < sprites.length; i++) {
+        for (int i = 0; i < GameCanvas.count; i++) {
             sprites[i].update(canvas, deltaTime);
         }
     }
 
     private void render(GameCanvas canvas, Graphics g) {
-        for (int i = 0; i < sprites.length; i++) {
+        for (int i = 0; i < GameCanvas.count; i++) {
             sprites[i].render(canvas, g);
         }
     }
+
+
 }
