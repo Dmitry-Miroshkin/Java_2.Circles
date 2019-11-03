@@ -26,8 +26,12 @@ public class Main {
     }
 
     public static void main(String[] args) {
-
-        System.out.println(strToIntSum(stringToArr()));
-
+        try {
+            System.out.println(strToIntSum(stringToArr()));
+        } catch (ArrayIndexOutOfBoundsException e1) {
+            System.out.println(" Строка не подходит к массиву");
+        } catch (NumberFormatException ex2) {
+            System.out.println("В строке неверные данные.");
+        }
     }
 }
