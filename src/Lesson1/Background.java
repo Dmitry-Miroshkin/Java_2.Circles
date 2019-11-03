@@ -1,3 +1,5 @@
+package Lesson1;
+
 import java.awt.*;
 
 class Background {
