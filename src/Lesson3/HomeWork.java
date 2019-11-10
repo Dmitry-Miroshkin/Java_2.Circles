@@ -28,19 +28,16 @@ public class HomeWork {
                 " перезаписи ссылочных объектов";
 
 
-        String strArr[] = (str1.split("\\s+"));
+        String[] strArr = (str1.split("\\s+"));
         HashMap<String, Integer> wordToCount = new HashMap<>();
-        for (String word : strArr)
-        {
-            if (!wordToCount.containsKey(word))
-            {
+        for (String word : strArr) {
+            if (!wordToCount.containsKey(word)) {
                 wordToCount.put(word, 0);
             }
             wordToCount.put(word, wordToCount.get(word) + 1);
         }
-        for (String word : wordToCount.keySet())
-        {
-            System.out.println("Слово "+word + " встречается " + wordToCount.get(word)+" раз(а)");
+        for (String word : wordToCount.keySet()) {
+            System.out.println("Слово " + word + " встречается " + wordToCount.get(word) + " раз(а)");
         }
     }
 }
