@@ -4,8 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class ClientGUI extends JFrame implements ActionListener, Thread.UncaughtExceptionHandler {
+public class ClientGUI extends JFrame implements ActionListener, Thread.UncaughtExceptionHandler, KeyListener {
 
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
@@ -49,7 +55,8 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         userList.setListData(users);
         scrollUsers.setPreferredSize(new Dimension(100, 0));
         cbAlwaysOnTop.addActionListener(this);
-
+        tfMessage.addKeyListener(this);
+        btnSend.addActionListener(this);
 
         panelTop.add(tfIPAddress);
         panelTop.add(tfPort);
@@ -65,7 +72,25 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         add(scrollUsers, BorderLayout.EAST);
         add(panelBottom, BorderLayout.SOUTH);
         add(panelTop, BorderLayout.NORTH);
+        log.setEditable(false);
+
+
         setVisible(true);
+    }
+
+    private void sendMessageToLog() {
+        Date date = new Date();
+        SimpleDateFormat formatForDateNow = new SimpleDateFormat("E yyyy.MM.dd hh:mm:ss");
+        String text = (log.getText() + formatForDateNow.format(date) + " >" + tfMessage.getText() + "\n");
+        log.setText(text);
+        try (FileOutputStream fos = new FileOutputStream("C://SomeDir//chatlog.txt")) {
+            // перевод строки в байты
+            byte[] buffer = text.getBytes();
+            fos.write(buffer, 0, buffer.length);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        tfMessage.setText("");
     }
 
     @Override
@@ -73,6 +98,8 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         Object src = e.getSource();
         if (src == cbAlwaysOnTop) {
             setAlwaysOnTop(cbAlwaysOnTop.isSelected());
+        } else if (src == btnSend) {
+            sendMessageToLog();
         } else {
             throw new RuntimeException("Unknown source: " + src);
         }
@@ -88,6 +115,23 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
 
         JOptionPane.showMessageDialog(this, msg, "Exception", JOptionPane.ERROR_MESSAGE);
         System.exit(1);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+//        tfMessage.setText(tfMessage.getText() + e.getKeyChar());
+        if (key == KeyEvent.VK_ENTER) {        // нажата клавиша - Enter
+            sendMessageToLog();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 }
 
