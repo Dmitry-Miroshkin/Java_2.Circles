@@ -1,5 +1,6 @@
 package chat.client;
 
+import chat.common.Library;
 import network.SocketThread;
 import network.SocketThreadListener;
 
@@ -25,7 +26,7 @@ import java.net.Socket;
 * */
 public class ClientGUI extends JFrame implements ActionListener, Thread.UncaughtExceptionHandler, SocketThreadListener {
 
-    private static final int WIDTH = 400;
+    private static final int WIDTH = 600;
     private static final int HEIGHT = 300;
 
     private final JTextArea log = new JTextArea();
@@ -44,7 +45,7 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
 
     private final JList<String> userList = new JList<>();
     private boolean shownIoErrors = false;
-    private SocketThread socketThread;
+    SocketThread socketThread;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -72,6 +73,7 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         btnSend.addActionListener(this);
         tfMessage.addActionListener(this);
         btnLogin.addActionListener(this);
+        btnDisconnect.addActionListener(this);
 
         panelTop.add(tfIPAddress);
         panelTop.add(tfPort);
@@ -79,6 +81,7 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         panelTop.add(tfLogin);
         panelTop.add(tfPassword);
         panelTop.add(btnLogin);
+        panelBottom.setVisible(false);
         panelBottom.add(btnDisconnect, BorderLayout.WEST);
         panelBottom.add(tfMessage, BorderLayout.CENTER);
         panelBottom.add(btnSend, BorderLayout.EAST);
@@ -99,6 +102,8 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
             sendMessage();
         } else if (src == btnLogin) {
             connect();
+        } else if (src == btnDisconnect) {
+            socketThread.close();
         } else {
             throw new RuntimeException("Unknown source: " + src);
         }
@@ -110,6 +115,7 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
             socket = new Socket(tfIPAddress.getText(), Integer.parseInt(tfPort.getText()));
         } catch (IOException e) {
             showException(e);
+            return;
         }
         socketThread = new SocketThread(this, "Client", socket);
     }
@@ -159,7 +165,8 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         msg = e.getClass().getCanonicalName() + ": " +
                 e.getMessage() + "\n\t" + ste[0];
 
-        JOptionPane.showMessageDialog(this, msg, "Exception", JOptionPane.ERROR_MESSAGE);
+//        JOptionPane.showMessageDialog(this, msg, "Exception", JOptionPane.ERROR_MESSAGE);
+        putLog("Exception: " + msg);
     }
 
     @Override
@@ -170,6 +177,8 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
     @Override
     public void onSocketThreadStop(SocketThread thread) {
         putLog("Socket Thread Stop");
+        panelBottom.setVisible(false);
+        panelTop.setVisible(true);
     }
 
     @Override
@@ -180,6 +189,11 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
     @Override
     public void onSocketReady(SocketThread thread, Socket socket) {
         putLog("Client connected");
+        panelTop.setVisible(false);
+        panelBottom.setVisible(true);
+        String login = tfLogin.getText();
+        String password = new String(tfPassword.getPassword());
+        thread.sendMessage(Library.getAuthRequest(login, password));
     }
 
     @Override

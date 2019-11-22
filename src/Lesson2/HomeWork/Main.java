@@ -1,7 +1,7 @@
 package Lesson2.HomeWork;
 
 public class Main {
-    private static String string = "10 3 1 2\n2 3 F 2\n5 6 7 1\n300 3 1 0";
+    private static String string = "10 3 1 4\n2 3 F 5\n5 6 7 10\n300 3 1 9";
 
     private static String[][] stringToArr() {
         String[][] array = new String[4][4];
